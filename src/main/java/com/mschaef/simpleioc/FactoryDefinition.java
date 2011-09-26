@@ -1,0 +1,116 @@
+package com.ectworks.simpleioc;
+
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Constructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+abstract class FactoryDefinition extends Definition {
+
+    private static final Logger log =
+        LoggerFactory.getLogger(FactoryDefinition.class);
+
+    Context ctx;
+    Class klass;
+    Constructor ctor;
+
+    FactoryDefinition(Context ctx, Class klass)
+    {
+        this.ctx = ctx;
+        this.klass = klass;
+
+        if (klass.isInterface())
+            invalid("Interfaces cannot be instantiated.");
+
+        if (Modifier.isAbstract(klass.getModifiers()))
+            invalid("Abstract classes cannot be instantiated.");
+
+        this.ctor = findInjectionConstructor();
+    }
+
+    public Class getName()
+    {
+        return klass;
+    }
+
+    void invalid(String reason)
+    {
+        throw new InvalidDefinitionException(reason, klass);
+    }
+
+    boolean isInjectionConstructor(Constructor ctor)
+    {
+        return (ctor.getAnnotation(Inject.class) != null);
+    }
+
+    Constructor findInjectionConstructor()
+    {
+        Constructor ctor = null;
+
+        for(Constructor c : klass.getConstructors()) {
+
+            if (!isInjectionConstructor(c)) {
+                log.debug("{} is not injection constructor", c);
+
+                continue;
+            }
+
+            if (ctor != null)
+                invalid("Cannot have multiple injection constructors.");
+
+            ctor = c;
+        }
+
+        if (ctor == null) {
+            try {
+                ctor = klass.getConstructor();
+            } catch (NoSuchMethodException ex) {
+                log.error("Error attempting to find null-ary constructor.", ex);
+            }
+        }
+
+        if (ctor == null)
+            invalid("No injection contstructor and no null-ary constructor.");
+
+        log.debug("{} has injection constructor: {}", this, ctor);
+
+        return ctor;
+    }
+
+    public Class[] getDependancies()
+    {
+        return ctor.getParameterTypes();
+    }
+
+    <T> T constructInstance(Class<T> klass)
+    {
+        log.debug("{}, constructing instance", this);
+
+        Class[] ctorArgumentTypes = getDependancies();
+
+        Object[] ctorArguments = new Object[ctorArgumentTypes.length];
+
+        for(int argNum = 0; argNum < ctorArgumentTypes.length; argNum++)
+            ctorArguments[argNum] = ctx.getInstance(ctorArgumentTypes[argNum]);
+
+        T object = null;
+
+        try {
+            object = (T)ctor.newInstance(ctorArguments);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error instantiating object.", ex);
+        }
+
+        log.debug("{}, constructed instance := {}", this, object);
+
+        return object;
+    }
+
+    public boolean isBindableTo(Class targetKlass)
+    {
+        return targetKlass.isAssignableFrom(klass);
+    }
+
+    public abstract <T> T getInstance(Class<T> klass);
+}
