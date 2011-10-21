@@ -29,31 +29,31 @@ public class Context implements InstanceFactory {
         defineInstance(this);
     }
 
-    void enrich(BindingMap bmap, Definition defn)
+    void enrich(Definition defn)
     {
         log.info("Enriching {} with {}", this, defn);
 
         for(Class dep : defn.getDependancies()) {
-            if (!bmap.isBound(dep))
+            if (!bindings.isBound(dep))
                 throw new RuntimeException("Unknown dependancy: " + dep);
         }
 
-        bmap.enrich(defn);
+        bindings.enrich(defn);
     }
 
     public void defineInstance(Object instance)
     {
-        enrich(bindings, new InstanceDefinition(instance));
+        enrich(new InstanceDefinition(instance));
     }
 
     public void defineSingleton(Class klass)
     {
-        enrich(bindings, new SingletonDefinition(this, klass));
+        enrich(new SingletonDefinition(this, klass));
     }
 
     public void definePrototype(Class klass)
     {
-        enrich(bindings, new PrototypeDefinition(this, klass));
+        enrich(new PrototypeDefinition(this, klass));
     }
 
     public boolean containsInstance(Class klass)
@@ -63,7 +63,7 @@ public class Context implements InstanceFactory {
 
     public void export(Class klass)
     {
-        enrich(exports, findDefinition(klass));
+        exports.enrich(findDefinition(klass));
     }
 
     Definition findDefinition(Class klass)

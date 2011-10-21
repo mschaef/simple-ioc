@@ -20,7 +20,7 @@ class BindingMap
         head = base.head;
     }
 
-    public void enrich(Definition defn)
+    void enrich(Definition defn)
     {
         Node n = new Node();
 
@@ -30,7 +30,7 @@ class BindingMap
         head = n;
     }
 
-    public Definition lookup(Class klass)
+    Definition lookup(Class klass)
     {
         for(Node pos = head; pos != null; pos = pos.prev) {
 
@@ -43,7 +43,7 @@ class BindingMap
         return null;
     }
 
-    public boolean isBound(Class klass)
+    boolean isBound(Class klass)
     {
         return (lookup(klass) != null);
     }
