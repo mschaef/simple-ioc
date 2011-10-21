@@ -4,19 +4,16 @@ public class BindingMap
 {
     private class Node
     {
-        Class name;
         Definition defn;
-
         Node prev;
     }
 
     Node head = null;
 
-    public void enrich(Class name, Definition defn)
+    public void enrich(Definition defn)
     {
         Node n = new Node();
 
-        n.name = name;
         n.defn = defn;
         n.prev = head;
 

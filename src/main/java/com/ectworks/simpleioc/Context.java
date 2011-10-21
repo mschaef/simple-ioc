@@ -24,7 +24,7 @@ public class Context implements InstanceFactory {
                 throw new RuntimeException("Unknown dependancy: " + dep);
         }
 
-        bindings.enrich(defn.getName(), defn);
+        bindings.enrich(defn);
     }
 
     public void defineInstance(Object instance)
