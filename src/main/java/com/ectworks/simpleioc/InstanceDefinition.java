@@ -15,9 +15,9 @@ class InstanceDefinition extends Definition {
         this.instance = instance;
     }
 
-    public Class getName()
+    public String getName()
     {
-        return instance.getClass();
+        return instance.getClass().toString();
     }
 
     public Class[] getDependancies()

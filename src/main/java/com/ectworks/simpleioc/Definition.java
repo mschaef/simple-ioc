@@ -2,7 +2,7 @@ package com.ectworks.simpleioc;
 
 abstract class Definition {
 
-    public abstract Class getName();
+    public abstract String getName();
 
     public abstract boolean isBindableTo(Class targetKlass);
 

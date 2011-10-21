@@ -29,9 +29,9 @@ abstract class FactoryDefinition extends Definition {
         this.ctor = findInjectionConstructor();
     }
 
-    public Class getName()
+    public String getName()
     {
-        return klass;
+        return klass.toString();
     }
 
     void invalid(String reason)

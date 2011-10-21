@@ -12,7 +12,7 @@ public class Context implements InstanceFactory {
 
     BindingMap exports = new BindingMap();
 
-    public Context()
+    public Context() // TODO: Add a context name
     {
         bindings = new BindingMap();
     }
@@ -40,6 +40,10 @@ public class Context implements InstanceFactory {
 
         bindings.addBinding(defn);
     }
+
+    // TODO: Definitions need to capture the current BindingMap, so they don't see bindings from 'their future'
+    // TODO: This may be the same as I wrote in the subcontext definition, but exports should be resolved to definitions at export time.
+    // TODO: Consider adding a forward definition facility.
 
     public void defineInstance(Object instance)
     {

@@ -15,9 +15,9 @@ class SubcontextDefinition extends Definition {
         this.subcontext = subcontext;
     }
 
-    public Class getName()
+    public String getName()
     {
-        return Context.class;
+        return Context.class.toString();
     }
 
     public Class[] getDependancies()
