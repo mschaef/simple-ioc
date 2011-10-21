@@ -56,9 +56,19 @@ public class Context implements InstanceFactory {
         enrich(new PrototypeDefinition(this, klass));
     }
 
+    public void defineSubcontext(Context subcontext)
+    {
+        enrich(new SubcontextDefinition(subcontext));
+    }
+
     public boolean containsInstance(Class klass)
     {
         return (bindings.lookup(klass) != null);
+    }
+
+    BindingMap getExports()
+    {
+        return exports;
     }
 
     public void export(Class klass)
