@@ -38,7 +38,7 @@ public class Context implements InstanceFactory {
                 throw new RuntimeException("Unknown dependancy: " + dep);
         }
 
-        bindings.enrich(defn);
+        bindings.addBinding(defn);
     }
 
     public void defineInstance(Object instance)
@@ -63,7 +63,7 @@ public class Context implements InstanceFactory {
 
     public void export(Class klass)
     {
-        exports.enrich(findDefinition(klass));
+        exports.addBinding(findDefinition(klass));
     }
 
     Definition findDefinition(Class klass)

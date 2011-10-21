@@ -20,7 +20,7 @@ class BindingMap
         head = base.head;
     }
 
-    void enrich(Definition defn)
+    void addBinding(Definition defn)
     {
         Node n = new Node();
 
