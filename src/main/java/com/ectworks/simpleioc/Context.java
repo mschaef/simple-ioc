@@ -10,6 +10,8 @@ public class Context implements InstanceFactory {
 
     BindingMap bindings = null;
 
+    BindingMap exports = new BindingMap();
+
     public Context()
     {
         bindings = new BindingMap();
@@ -27,31 +29,31 @@ public class Context implements InstanceFactory {
         defineInstance(this);
     }
 
-    void enrich(Definition defn)
+    void enrich(BindingMap bmap, Definition defn)
     {
         log.info("Enriching {} with {}", this, defn);
 
         for(Class dep : defn.getDependancies()) {
-            if (!bindings.isBound(dep))
+            if (!bmap.isBound(dep))
                 throw new RuntimeException("Unknown dependancy: " + dep);
         }
 
-        bindings.enrich(defn);
+        bmap.enrich(defn);
     }
 
     public void defineInstance(Object instance)
     {
-        enrich(new InstanceDefinition(instance));
+        enrich(bindings, new InstanceDefinition(instance));
     }
 
     public void defineSingleton(Class klass)
     {
-        enrich(new SingletonDefinition(this, klass));
+        enrich(bindings, new SingletonDefinition(this, klass));
     }
 
     public void definePrototype(Class klass)
     {
-        enrich(new PrototypeDefinition(this, klass));
+        enrich(bindings, new PrototypeDefinition(this, klass));
     }
 
     public boolean containsInstance(Class klass)
@@ -59,14 +61,26 @@ public class Context implements InstanceFactory {
         return (bindings.lookup(klass) != null);
     }
 
-    public <T> T getInstance(Class<T> klass)
+    public void export(Class klass)
     {
-        log.info("{} getInstance for {}", this, klass);
+        enrich(exports, findDefinition(klass));
+    }
 
+    Definition findDefinition(Class klass)
+    {
         Definition defn = bindings.lookup(klass);
 
         if (defn == null)
             throw new RuntimeException("No definition for instance " + klass);
+
+        return defn;
+    }
+
+    public <T> T getInstance(Class<T> klass)
+    {
+        log.info("{} getInstance for {}", this, klass);
+
+        Definition defn = findDefinition(klass);
 
         return defn.getInstance(klass);
     }
