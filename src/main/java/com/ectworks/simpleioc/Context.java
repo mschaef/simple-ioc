@@ -8,9 +8,21 @@ public class Context implements InstanceFactory {
     private static final Logger log =
         LoggerFactory.getLogger(Context.class);
 
-    BindingMap bindings = new BindingMap();
+    BindingMap bindings = null;
 
     public Context()
+    {
+        bindings = new BindingMap();
+    }
+
+    public Context(Context base)
+    {
+        bindings = new BindingMap(base.bindings);
+
+        initialize();
+    }
+
+    void initialize()
     {
         defineInstance(this);
     }

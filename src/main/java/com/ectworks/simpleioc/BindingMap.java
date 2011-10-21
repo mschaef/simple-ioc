@@ -1,6 +1,6 @@
 package com.ectworks.simpleioc;
 
-public class BindingMap
+class BindingMap
 {
     private class Node
     {
@@ -9,6 +9,16 @@ public class BindingMap
     }
 
     Node head = null;
+
+    BindingMap()
+    {
+        head = null;
+    }
+
+    BindingMap(BindingMap base)
+    {
+        head = base.head;
+    }
 
     public void enrich(Definition defn)
     {
