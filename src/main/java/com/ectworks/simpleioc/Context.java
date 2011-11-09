@@ -47,6 +47,16 @@ public class Context implements InstanceFactory {
         bindings.addBinding(defn);
     }
 
+    Definition findDefinition(Class klass)
+    {
+        return bindings.lookup(klass);
+    }
+
+    Definition findPublicDefinition(Class klass)
+    {
+        return exports.lookup(klass);
+    }
+
     // TODO: Definitions need to capture the current BindingMap, so they don't see bindings from 'their future'
     // TODO: This may be the same as I wrote in the subcontext definition, but exports should be resolved to definitions at export time.
     // TODO: Consider adding a forward definition facility.
@@ -76,24 +86,14 @@ public class Context implements InstanceFactory {
         return (bindings.lookup(klass) != null);
     }
 
-    BindingMap getExports()
-    {
-        return exports;
-    }
-
     public void export(Class klass)
     {
-        exports.addBinding(findDefinition(klass));
-    }
-
-    Definition findDefinition(Class klass)
-    {
-        Definition defn = bindings.lookup(klass);
+        Definition defn = findDefinition(klass);
 
         if (defn == null)
-            throw new RuntimeException("No definition for instance " + klass);
+            throw new RuntimeException("No definition for instance to export " + klass);
 
-        return defn;
+        exports.addBinding(defn);
     }
 
     public <T> T getInstance(Class<T> klass)
@@ -101,6 +101,21 @@ public class Context implements InstanceFactory {
         log.info("{} getInstance for {}", this, klass);
 
         Definition defn = findDefinition(klass);
+
+        if (defn == null)
+            throw new RuntimeException("No definition for instance " + klass);
+
+        return defn.getInstance(klass);
+    }
+
+    public <T> T getPublicInstance(Class<T> klass)
+    {
+        log.info("{} getPublicInstance for {}", this, klass);
+
+        Definition defn = findPublicDefinition(klass);
+
+        if (defn == null)
+            throw new RuntimeException("No public definition for instance " + klass);
 
         return defn.getInstance(klass);
     }
