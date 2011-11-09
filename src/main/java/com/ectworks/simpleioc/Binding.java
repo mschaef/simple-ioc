@@ -5,9 +5,14 @@ final class Binding
     private Definition defn;
     private Binding prev;
 
-    Binding(Definition defn, Binding prev) {
+    private Binding(Definition defn, Binding prev) {
         this.defn = defn;
         this.prev = prev;
+    }
+
+    static Binding extend(Binding start, Definition defn)
+    {
+        return new Binding(defn, start);
     }
 
     static Definition lookup(Binding start, Class klass)

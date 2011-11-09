@@ -10,22 +10,21 @@ public class Context implements InstanceFactory {
 
     String ctxName = null;
 
-    BindingMap bindings = null;
+    Binding bindings = null;
 
-    BindingMap exports = new BindingMap();
+    Binding exports = null;
 
     public Context(String ctxName)
     {
         this.ctxName = ctxName;
 
-        bindings = new BindingMap();
+        initialize();
     }
 
     public Context(String ctxName, Context base)
     {
+        this.bindings = base.bindings;
         this.ctxName = ctxName;
-
-        bindings = new BindingMap(base.bindings);
 
         initialize();
     }
@@ -40,21 +39,21 @@ public class Context implements InstanceFactory {
         log.info("Enriching {} with {}", this, defn);
 
         for(Class dep : defn.getDependancies()) {
-            if (!bindings.isBound(dep))
+            if (!Binding.isBound(bindings, dep))
                 throw new RuntimeException("Unknown dependancy: " + dep);
         }
 
-        bindings.addBinding(defn);
+        bindings = Binding.extend(bindings, defn);
     }
 
     Definition findDefinition(Class klass)
     {
-        return bindings.lookup(klass);
+        return Binding.lookup(bindings, klass);
     }
 
     Definition findPublicDefinition(Class klass)
     {
-        return exports.lookup(klass);
+        return Binding.lookup(exports, klass);
     }
 
     // TODO: Definitions need to capture the current BindingMap, so they don't see bindings from 'their future'
@@ -82,7 +81,7 @@ public class Context implements InstanceFactory {
 
     public boolean containsInstance(Class klass)
     {
-        return (bindings.lookup(klass) != null);
+        return (Binding.lookup(bindings, klass) != null);
     }
 
     public void export(Class klass)
@@ -92,7 +91,7 @@ public class Context implements InstanceFactory {
         if (defn == null)
             throw new RuntimeException("No definition for instance to export " + klass);
 
-        exports.addBinding(defn);
+        exports = Binding.extend(exports, defn);
     }
 
     public <T> T getInstance(Class<T> klass)
