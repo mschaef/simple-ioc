@@ -45,7 +45,7 @@ public class App
 
     public static void go()
     {
-        Context ctx = new Context();
+        Context ctx = new Context("main");
 
         ctx.defineSingleton(NumberHolder.class);
         ctx.defineSingleton(EntryPoint.class);

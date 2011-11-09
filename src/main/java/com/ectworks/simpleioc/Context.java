@@ -8,17 +8,23 @@ public class Context implements InstanceFactory {
     private static final Logger log =
         LoggerFactory.getLogger(Context.class);
 
+    String ctxName = null;
+
     BindingMap bindings = null;
 
     BindingMap exports = new BindingMap();
 
-    public Context() // TODO: Add a context name
+    public Context(String ctxName)
     {
+        this.ctxName = ctxName;
+
         bindings = new BindingMap();
     }
 
-    public Context(Context base)
+    public Context(String ctxName, Context base)
     {
+        this.ctxName = ctxName;
+
         bindings = new BindingMap(base.bindings);
 
         initialize();
@@ -97,5 +103,10 @@ public class Context implements InstanceFactory {
         Definition defn = findDefinition(klass);
 
         return defn.getInstance(klass);
+    }
+
+    public String toString()
+    {
+        return "#<" + this.getClass().getSimpleName() + ":" + ctxName + ">";
     }
 }
