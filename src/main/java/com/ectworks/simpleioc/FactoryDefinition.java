@@ -39,39 +39,51 @@ abstract class FactoryDefinition extends Definition {
         throw new InvalidDefinitionException(reason, klass);
     }
 
-    boolean isInjectionConstructor(Constructor ctor)
+    boolean isExplicitInjectionConstructor(Constructor ctor)
     {
         return (ctor.getAnnotation(Inject.class) != null);
     }
 
-    Constructor findInjectionConstructor()
+    Constructor findExplicitInjectionConstructor()
     {
         Constructor ctor = null;
 
         for(Constructor c : klass.getConstructors()) {
 
-            if (!isInjectionConstructor(c)) {
+            if (!isExplicitInjectionConstructor(c)) {
                 log.debug("{} is not injection constructor", c);
 
                 continue;
             }
 
             if (ctor != null)
-                invalid("Cannot have multiple injection constructors.");
+                invalid("Cannot have multiple explicit injection constructors.");
 
             ctor = c;
         }
 
-        if (ctor == null) {
-            try {
-                ctor = klass.getConstructor();
-            } catch (NoSuchMethodException ex) {
-                log.error("Error attempting to find null-ary constructor.", ex);
-            }
-        }
+        return ctor;
+    }
+
+    Constructor findImplicitInjectionConstructor()
+    {
+        Constructor ctors[] = klass.getConstructors();
+
+        if (ctors.length != 1)
+            invalid(klass + "Must have one public constructor for implicit injection.");
+
+        return ctors[0];
+    }
+
+    Constructor findInjectionConstructor()
+    {
+        Constructor ctor = findExplicitInjectionConstructor();
 
         if (ctor == null)
-            invalid("No injection contstructor and no null-ary constructor.");
+            ctor = findImplicitInjectionConstructor();
+
+        if (ctor == null)
+            invalid("No constructor available for injection.");
 
         log.debug("{} has injection constructor: {}", this, ctor);
 
