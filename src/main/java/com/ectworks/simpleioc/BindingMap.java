@@ -2,13 +2,7 @@ package com.ectworks.simpleioc;
 
 class BindingMap
 {
-    private class Node
-    {
-        Definition defn;
-        Node prev;
-    }
-
-    Node head = null;
+    Binding head = null;
 
     BindingMap()
     {
@@ -22,7 +16,7 @@ class BindingMap
 
     void addBinding(Definition defn)
     {
-        Node n = new Node();
+        Binding n = new Binding();
 
         n.defn = defn;
         n.prev = head;
@@ -32,7 +26,7 @@ class BindingMap
 
     Definition lookup(Class klass)
     {
-        for(Node pos = head; pos != null; pos = pos.prev) {
+        for(Binding pos = head; pos != null; pos = pos.prev) {
 
             Definition defn = pos.defn;
 
