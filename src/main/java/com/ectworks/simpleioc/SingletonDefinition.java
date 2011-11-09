@@ -8,7 +8,7 @@ class SingletonDefinition extends FactoryDefinition {
 
     Object instance;
 
-    public <T> T getInstance(Class<T> klass)
+    <T> T getInstance(Class<T> klass)
     {
         if (instance == null)
             instance = constructInstance(klass);

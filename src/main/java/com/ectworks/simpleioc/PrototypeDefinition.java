@@ -6,7 +6,7 @@ class PrototypeDefinition extends FactoryDefinition {
         super(ctx, klass);
     }
 
-    public <T> T getInstance(Class<T> klass)
+    <T> T getInstance(Class<T> klass)
     {
         return constructInstance(klass);
     }

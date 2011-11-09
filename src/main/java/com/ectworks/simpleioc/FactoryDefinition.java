@@ -95,16 +95,23 @@ abstract class FactoryDefinition extends Definition {
         return ctor.getParameterTypes();
     }
 
-    <T> T constructInstance(Class<T> klass)
+    Object[] getConstructorArguments()
     {
-        log.debug("{}, constructing instance", this);
-
         Class[] ctorArgumentTypes = getDependancies();
 
         Object[] ctorArguments = new Object[ctorArgumentTypes.length];
 
         for(int argNum = 0; argNum < ctorArgumentTypes.length; argNum++)
             ctorArguments[argNum] = ctx.getInstance(ctorArgumentTypes[argNum]);
+
+        return ctorArguments;
+    }
+
+    <T> T constructInstance(Class<T> klass)
+    {
+        log.debug("{}, constructing instance", this);
+
+        Object[] ctorArguments = getConstructorArguments();
 
         T object = null;
 
@@ -119,10 +126,10 @@ abstract class FactoryDefinition extends Definition {
         return object;
     }
 
-    public boolean isBindableTo(Class targetKlass)
+    boolean isBindableTo(Class targetKlass)
     {
         return targetKlass.isAssignableFrom(klass);
     }
 
-    public abstract <T> T getInstance(Class<T> klass);
+    abstract <T> T getInstance(Class<T> klass);
 }
