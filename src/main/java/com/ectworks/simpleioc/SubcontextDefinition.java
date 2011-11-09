@@ -8,9 +8,9 @@ class SubcontextDefinition extends Definition {
     private static final Logger log =
         LoggerFactory.getLogger(SubcontextDefinition.class);
 
-    Context subcontext;
+    Binding subcontext;
 
-    SubcontextDefinition(Context subcontext)
+    SubcontextDefinition(Binding subcontext)
     {
         this.subcontext = subcontext;
     }
@@ -27,11 +27,11 @@ class SubcontextDefinition extends Definition {
 
     boolean isBindableTo(Class targetKlass)
     {
-        return (subcontext.findPublicDefinition(targetKlass) != null);
+        return Binding.isBound(subcontext, targetKlass);
     }
 
     <T> T getInstance(Class<T> klass)
     {
-        return (T)subcontext.getPublicInstance(klass);
+        return Binding.getInstance(subcontext, klass);
     }
 }

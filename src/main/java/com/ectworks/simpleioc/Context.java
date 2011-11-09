@@ -76,7 +76,7 @@ public class Context implements InstanceFactory {
 
     public void defineSubcontext(Context subcontext)
     {
-        enrich(new SubcontextDefinition(subcontext));
+        enrich(new SubcontextDefinition(exports));
     }
 
     public boolean containsInstance(Class klass)
