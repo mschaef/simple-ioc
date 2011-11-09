@@ -2,7 +2,7 @@ package com.ectworks.simpleioc;
 
 class SingletonDefinition extends FactoryDefinition {
 
-    SingletonDefinition(Context ctx, Class klass) {
+    SingletonDefinition(Binding ctx, Class klass) {
         super(ctx, klass);
     }
 

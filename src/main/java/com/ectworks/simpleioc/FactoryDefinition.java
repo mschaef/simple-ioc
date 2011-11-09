@@ -11,11 +11,11 @@ abstract class FactoryDefinition extends Definition {
     private static final Logger log =
         LoggerFactory.getLogger(FactoryDefinition.class);
 
-    Context ctx;
+    Binding ctx;
     Class klass;
     Constructor ctor;
 
-    FactoryDefinition(Context ctx, Class klass)
+    FactoryDefinition(Binding ctx, Class klass)
     {
         this.ctx = ctx;
         this.klass = klass;
@@ -102,7 +102,9 @@ abstract class FactoryDefinition extends Definition {
         Object[] ctorArguments = new Object[ctorArgumentTypes.length];
 
         for(int argNum = 0; argNum < ctorArgumentTypes.length; argNum++)
-            ctorArguments[argNum] = ctx.getInstance(ctorArgumentTypes[argNum]);
+            ctorArguments[argNum] =
+                Binding.getInstance(ctx,
+                                    ctorArgumentTypes[argNum]);
 
         return ctorArguments;
     }

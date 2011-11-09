@@ -56,7 +56,6 @@ public class Context implements InstanceFactory {
         return Binding.lookup(exports, klass);
     }
 
-    // TODO: Definitions need to capture the current BindingMap, so they don't see bindings from 'their future'
     // TODO: Consider adding a forward definition facility.
 
     public void defineInstance(Object instance)
@@ -66,12 +65,12 @@ public class Context implements InstanceFactory {
 
     public void defineSingleton(Class klass)
     {
-        enrich(new SingletonDefinition(this, klass));
+        enrich(new SingletonDefinition(bindings, klass));
     }
 
     public void definePrototype(Class klass)
     {
-        enrich(new PrototypeDefinition(this, klass));
+        enrich(new PrototypeDefinition(bindings, klass));
     }
 
     public void defineSubcontext(Context subcontext)
