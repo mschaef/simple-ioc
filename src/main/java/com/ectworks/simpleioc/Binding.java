@@ -5,42 +5,18 @@ final class Binding
     private Definition defn;
     private Binding prev;
 
-    private Binding(Definition defn, Binding prev) {
+    Binding(Definition defn, Binding prev) {
         this.defn = defn;
         this.prev = prev;
     }
 
-    static Binding extend(Binding start, Definition defn)
+    Definition getDefinition()
     {
-        return new Binding(defn, start);
+        return defn;
     }
 
-    static Definition lookup(Binding start, Class klass)
+    Binding getPrevious()
     {
-        for(Binding pos = start; pos != null; pos = pos.prev) {
-
-            Definition defn = pos.defn;
-
-            if (defn.isBindableTo(klass))
-                return defn;
-        }
-
-        return null;
-    }
-
-    static boolean isBound(Binding start, Class klass)
-    {
-        return (lookup(start, klass) != null);
-    }
-
-    static <T> T getInstance(Binding start, Class<T> klass)
-    {
-        Definition defn = Binding.lookup(start, klass);
-
-        if (defn == null)
-            throw new RuntimeException("No definition for instance " + klass);
-
-        return defn.getInstance(klass);
-
+        return prev;
     }
 }

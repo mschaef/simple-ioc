@@ -8,11 +8,11 @@ class SubcontextDefinition extends Definition {
     private static final Logger log =
         LoggerFactory.getLogger(SubcontextDefinition.class);
 
-    Binding subcontext;
+    Environment env;
 
-    SubcontextDefinition(Binding subcontext)
+    SubcontextDefinition(Environment env)
     {
-        this.subcontext = subcontext;
+        this.env = env;
     }
 
     String getName()
@@ -27,11 +27,11 @@ class SubcontextDefinition extends Definition {
 
     boolean isBindableTo(Class targetKlass)
     {
-        return Binding.isBound(subcontext, targetKlass);
+        return env.isBound(targetKlass);
     }
 
     <T> T getInstance(Class<T> klass)
     {
-        return Binding.getInstance(subcontext, klass);
+        return env.getInstance(klass);
     }
 }

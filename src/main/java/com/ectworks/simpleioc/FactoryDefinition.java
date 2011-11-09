@@ -11,13 +11,13 @@ abstract class FactoryDefinition extends Definition {
     private static final Logger log =
         LoggerFactory.getLogger(FactoryDefinition.class);
 
-    Binding ctx;
+    Environment env;
     Class klass;
     Constructor ctor;
 
-    FactoryDefinition(Binding ctx, Class klass)
+    FactoryDefinition(Environment env, Class klass)
     {
-        this.ctx = ctx;
+        this.env = env;
         this.klass = klass;
 
         if (klass.isInterface())
@@ -103,8 +103,7 @@ abstract class FactoryDefinition extends Definition {
 
         for(int argNum = 0; argNum < ctorArgumentTypes.length; argNum++)
             ctorArguments[argNum] =
-                Binding.getInstance(ctx,
-                                    ctorArgumentTypes[argNum]);
+                env.getInstance(ctorArgumentTypes[argNum]);
 
         return ctorArguments;
     }

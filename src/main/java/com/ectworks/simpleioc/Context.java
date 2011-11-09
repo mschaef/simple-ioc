@@ -10,21 +10,24 @@ public class Context implements InstanceFactory {
 
     String ctxName = null;
 
-    Binding bindings = null;
+    Environment bindings = null;
 
-    Binding exports = null;
+    Environment exports = null;
 
     public Context(String ctxName)
     {
-        this.ctxName = ctxName;
+        this.bindings = new Environment();
+        this.exports  = new Environment();
+        this.ctxName  = ctxName;
 
         initialize();
     }
 
     public Context(String ctxName, Context base)
     {
-        this.bindings = base.bindings;
-        this.ctxName = ctxName;
+        this.bindings = new Environment(base.bindings);
+        this.exports  = new Environment();
+        this.ctxName  = ctxName;
 
         initialize();
     }
@@ -39,11 +42,11 @@ public class Context implements InstanceFactory {
         log.info("Enriching {} with {}", this, defn);
 
         for(Class dep : defn.getDependancies()) {
-            if (!Binding.isBound(bindings, dep))
+            if (!bindings.isBound(dep))
                 throw new RuntimeException("Unknown dependancy: " + dep);
         }
 
-        bindings = Binding.extend(bindings, defn);
+        bindings.extend(defn);
     }
 
     // TODO: Consider adding a forward definition facility.
@@ -70,22 +73,22 @@ public class Context implements InstanceFactory {
 
     public boolean containsInstance(Class klass)
     {
-        return (Binding.lookup(bindings, klass) != null);
+        return (bindings.lookup(klass) != null);
     }
 
     public void export(Class klass)
     {
-        Definition defn = Binding.lookup(bindings, klass);
+        Definition defn = bindings.lookup(klass);
 
         if (defn == null)
             throw new RuntimeException("No definition for instance to export " + klass);
 
-        exports = Binding.extend(exports, defn);
+        exports.extend(defn);
     }
 
     public <T> T getInstance(Class<T> klass)
     {
-        return Binding.getInstance(bindings, klass);
+        return bindings.getInstance(klass);
     }
 
     public String toString()

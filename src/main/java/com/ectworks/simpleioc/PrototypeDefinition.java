@@ -2,8 +2,8 @@ package com.ectworks.simpleioc;
 
 class PrototypeDefinition extends FactoryDefinition {
 
-    PrototypeDefinition(Binding ctx, Class klass) {
-        super(ctx, klass);
+    PrototypeDefinition(Environment env, Class klass) {
+        super(env, klass);
     }
 
     <T> T getInstance(Class<T> klass)
