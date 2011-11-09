@@ -46,16 +46,6 @@ public class Context implements InstanceFactory {
         bindings = Binding.extend(bindings, defn);
     }
 
-    Definition findDefinition(Class klass)
-    {
-        return Binding.lookup(bindings, klass);
-    }
-
-    Definition findPublicDefinition(Class klass)
-    {
-        return Binding.lookup(exports, klass);
-    }
-
     // TODO: Consider adding a forward definition facility.
 
     public void defineInstance(Object instance)
@@ -85,7 +75,7 @@ public class Context implements InstanceFactory {
 
     public void export(Class klass)
     {
-        Definition defn = findDefinition(klass);
+        Definition defn = Binding.lookup(bindings, klass);
 
         if (defn == null)
             throw new RuntimeException("No definition for instance to export " + klass);
@@ -96,11 +86,6 @@ public class Context implements InstanceFactory {
     public <T> T getInstance(Class<T> klass)
     {
         return Binding.getInstance(bindings, klass);
-    }
-
-    public <T> T getPublicInstance(Class<T> klass)
-    {
-        return Binding.getInstance(exports, klass);
     }
 
     public String toString()
