@@ -96,26 +96,12 @@ public class Context implements InstanceFactory {
 
     public <T> T getInstance(Class<T> klass)
     {
-        log.info("{} getInstance for {}", this, klass);
-
-        Definition defn = findDefinition(klass);
-
-        if (defn == null)
-            throw new RuntimeException("No definition for instance " + klass);
-
-        return defn.getInstance(klass);
+        return Binding.getInstance(bindings, klass);
     }
 
     public <T> T getPublicInstance(Class<T> klass)
     {
-        log.info("{} getPublicInstance for {}", this, klass);
-
-        Definition defn = findPublicDefinition(klass);
-
-        if (defn == null)
-            throw new RuntimeException("No public definition for instance " + klass);
-
-        return defn.getInstance(klass);
+        return Binding.getInstance(exports, klass);
     }
 
     public String toString()

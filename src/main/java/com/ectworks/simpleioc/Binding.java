@@ -33,4 +33,14 @@ final class Binding
         return (lookup(start, klass) != null);
     }
 
+    static <T> T getInstance(Binding start, Class<T> klass)
+    {
+        Definition defn = Binding.lookup(start, klass);
+
+        if (defn == null)
+            throw new RuntimeException("No definition for instance " + klass);
+
+        return defn.getInstance(klass);
+
+    }
 }
