@@ -16,29 +16,16 @@ class BindingMap
 
     void addBinding(Definition defn)
     {
-        Binding n = new Binding();
-
-        n.defn = defn;
-        n.prev = head;
-
-        head = n;
+        head = new Binding(defn, head);
     }
 
     Definition lookup(Class klass)
     {
-        for(Binding pos = head; pos != null; pos = pos.prev) {
-
-            Definition defn = pos.defn;
-
-            if (defn.isBindableTo(klass))
-                return defn;
-        }
-
-        return null;
+        return Binding.lookup(head, klass);
     }
 
     boolean isBound(Class klass)
     {
-        return (lookup(klass) != null);
+        return Binding.isBound(head, klass);
     }
 }
