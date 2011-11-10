@@ -39,8 +39,6 @@ public class Context implements InstanceFactory {
 
     void enrich(Definition defn)
     {
-        log.error("ENRICH");
-
         log.info("Enriching {} with {}", this, defn);
 
         for(Class dep : defn.getDependancies()) {
