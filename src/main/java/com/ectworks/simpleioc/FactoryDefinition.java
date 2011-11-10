@@ -15,6 +15,13 @@ abstract class FactoryDefinition extends Definition {
     Class klass;
     Constructor ctor;
 
+    void invalid(String reason)
+    {
+        log.error("Invalid definition: {}, {}", this, reason);
+
+        throw new InvalidDefinitionException(reason, klass);
+    }
+
     FactoryDefinition(Environment env, Class klass)
     {
         this.env = env;
@@ -32,11 +39,6 @@ abstract class FactoryDefinition extends Definition {
     public String getName()
     {
         return klass.toString();
-    }
-
-    void invalid(String reason)
-    {
-        throw new InvalidDefinitionException(reason, klass);
     }
 
     boolean isExplicitInjectionConstructor(Constructor ctor)

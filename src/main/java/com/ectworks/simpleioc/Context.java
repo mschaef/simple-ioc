@@ -39,11 +39,16 @@ public class Context implements InstanceFactory {
 
     void enrich(Definition defn)
     {
+        log.error("ENRICH");
+
         log.info("Enriching {} with {}", this, defn);
 
         for(Class dep : defn.getDependancies()) {
-            if (!bindings.isBound(dep))
+            if (!bindings.isBound(dep)) {
+                log.error("Missing dependency {} in {}", dep,  defn);
+
                 throw new RuntimeException("Unknown dependancy: " + dep);
+            }
         }
 
         bindings.extend(defn);
