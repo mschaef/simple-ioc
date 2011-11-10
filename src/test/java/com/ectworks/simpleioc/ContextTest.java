@@ -306,6 +306,7 @@ public class ContextTest {
     }
 
     // Transitive Dependencies
+    @Test
     public void contextResolvesTransitiveSingletonDependencies()
     {
         ctx.defineSingleton(TestClass1.class);
@@ -324,8 +325,8 @@ public class ContextTest {
         assertSame(ctc.tc2, inst2);
     }
 
-
     // Subclass name resolution
+    @Test
     public void contextResolvesToFirstMatch1()
     {
         ctx.defineSingleton(ClassBase.class);
@@ -335,6 +336,7 @@ public class ContextTest {
         assertTrue(ctx.getInstance(ClassBase.class) instanceof ClassSubSub);
     }
 
+    @Test
     public void contextResolvesToFirstMatch2()
     {
         ctx.defineSingleton(ClassSubSub.class);
@@ -342,6 +344,25 @@ public class ContextTest {
         ctx.defineSingleton(ClassBase.class);
 
         assertTrue(ctx.getInstance(ClassBase.class) instanceof ClassBase);
+    }
+
+    // Context Derivation
+    @Test
+    public void derivedContextSeesExportedParentDefinitions()
+    {
+        ctx.defineSingleton(TestClass1.class);
+        ctx.defineSingleton(TestClass2.class);
+
+        ctx.export(TestClass1.class);
+        ctx.export(TestClass2.class);
+
+        Context ctx2 = new Context("derived", ctx);
+
+        assertSame(ctx.getInstance(TestClass1.class),
+                   ctx2.getInstance(TestClass1.class));
+
+        assertSame(ctx.getInstance(TestClass2.class),
+                   ctx2.getInstance(TestClass2.class));
     }
 }
 
