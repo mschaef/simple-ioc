@@ -10,13 +10,13 @@ public class Context implements InstanceFactory {
 
     String ctxName = null;
 
-    Environment bindings = null;
+    Environment env = null;
 
     Environment exports = null;
 
     public Context(String ctxName)
     {
-        this.bindings = new Environment();
+        this.env = new Environment();
         this.exports  = new Environment();
         this.ctxName  = ctxName;
 
@@ -25,7 +25,7 @@ public class Context implements InstanceFactory {
 
     public Context(String ctxName, Context base)
     {
-        this.bindings = new Environment(base.bindings);
+        this.env = new Environment(base.env);
         this.exports  = new Environment();
         this.ctxName  = ctxName;
 
@@ -42,14 +42,14 @@ public class Context implements InstanceFactory {
         log.info("Enriching {} with {}", this, defn);
 
         for(Class dep : defn.getDependancies()) {
-            if (!bindings.isBound(dep)) {
+            if (!env.isBound(dep)) {
                 log.error("Missing dependency {} in {}", dep,  defn);
 
                 throw new RuntimeException("Unknown dependancy: " + dep);
             }
         }
 
-        bindings.extend(defn);
+        env.extend(defn);
     }
 
     // TODO: Consider adding a forward definition facility.
@@ -61,27 +61,22 @@ public class Context implements InstanceFactory {
 
     public void defineSingleton(Class klass)
     {
-        enrich(new SingletonDefinition(bindings, klass));
+        enrich(new SingletonDefinition(env, klass));
     }
 
     public void definePrototype(Class klass)
     {
-        enrich(new PrototypeDefinition(bindings, klass));
-    }
-
-    public void defineSubcontext(Context subcontext)
-    {
-        enrich(new SubcontextDefinition(exports));
+        enrich(new PrototypeDefinition(env, klass));
     }
 
     public boolean containsInstance(Class klass)
     {
-        return (bindings.lookup(klass) != null);
+        return (env.lookup(klass) != null);
     }
 
     public void export(Class klass)
     {
-        Definition defn = bindings.lookup(klass);
+        Definition defn = env.lookup(klass);
 
         if (defn == null)
             throw new RuntimeException("No definition for instance to export " + klass);
@@ -91,7 +86,7 @@ public class Context implements InstanceFactory {
 
     public <T> T getInstance(Class<T> klass)
     {
-        return bindings.getInstance(klass);
+        return env.getInstance(klass);
     }
 
     public String toString()

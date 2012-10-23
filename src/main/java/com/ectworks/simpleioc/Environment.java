@@ -2,20 +2,14 @@ package com.ectworks.simpleioc;
 
 class Environment
 {
-    // TODO: Iterator over environment
-    // TODO: Iterator over non-shared environment
-    // TODO: AutoRelease, ReleaseIfNecessary
-
-    Binding base = null;
     Binding top = null;
 
     Environment()
     {
-    };
+    }
 
     Environment(Environment original)
     {
-        this.base = original.top;
         this.top  = original.top;
     }
 
