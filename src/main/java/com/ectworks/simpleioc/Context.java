@@ -3,7 +3,7 @@ package com.ectworks.simpleioc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Context
+public class Context implements InstanceFactory
 {
     private static final Logger log =
         LoggerFactory.getLogger(Context.class);
