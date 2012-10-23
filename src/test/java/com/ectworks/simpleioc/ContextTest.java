@@ -40,9 +40,11 @@ public class ContextTest {
         }
     }
 
-    static class ClassBase {};
-    static class ClassSub extends ClassBase {};
-    static class ClassSubSub extends ClassSub {};
+    static class ClassBase {  }
+
+    static class ClassSub extends ClassBase {  }
+
+    static class ClassSubSub extends ClassSub {  }
 
     // Context Self
     @Test

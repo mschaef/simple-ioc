@@ -50,7 +50,7 @@ abstract class FactoryDefinition extends Definition {
     {
         Constructor ctor = null;
 
-        for(Constructor c : klass.getConstructors()) {
+        for(Constructor c : klass.getDeclaredConstructors()) {
 
             if (!isExplicitInjectionConstructor(c)) {
                 log.debug("{} is not injection constructor", c);
@@ -69,7 +69,7 @@ abstract class FactoryDefinition extends Definition {
 
     Constructor findImplicitInjectionConstructor()
     {
-        Constructor ctors[] = klass.getConstructors();
+        Constructor ctors[] = klass.getDeclaredConstructors();
 
         if (ctors.length != 1)
             invalid(klass + "Must have one public constructor for implicit injection.");
