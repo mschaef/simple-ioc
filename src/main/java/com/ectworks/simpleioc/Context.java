@@ -34,7 +34,7 @@ public class Context implements InstanceFactory {
 
     void initialize()
     {
-        defineInstance(this);
+        addInstance(this);
     }
 
     void enrich(Definition defn)
@@ -54,7 +54,7 @@ public class Context implements InstanceFactory {
 
     // TODO: Consider adding a forward definition facility.
 
-    public void defineInstance(Object instance)
+    public void addInstance(Object instance)
     {
         enrich(new InstanceDefinition(instance));
     }

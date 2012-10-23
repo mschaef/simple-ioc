@@ -59,7 +59,7 @@ public class ContextTest {
     {
         Object inst = new TestClass1();
 
-        ctx.defineInstance(inst);
+        ctx.addInstance(inst);
 
         Object inst2 = ctx.getInstance(TestClass1.class);
 
@@ -69,7 +69,7 @@ public class ContextTest {
     @Test
     public void contextReturnsInstanceTwice()
     {
-        ctx.defineInstance(new TestClass1());
+        ctx.addInstance(new TestClass1());
 
         Object inst = ctx.getInstance(TestClass1.class);
         Object inst2 = ctx.getInstance(TestClass1.class);
@@ -81,10 +81,10 @@ public class ContextTest {
     public void contextShadowsInstance()
     {
         Object inst = new TestClass1();
-        ctx.defineInstance(inst);
+        ctx.addInstance(inst);
 
         Object inst2 = new TestClass1();
-        ctx.defineInstance(inst2);
+        ctx.addInstance(inst2);
 
         Object inst3 = ctx.getInstance(TestClass1.class);
 
@@ -95,10 +95,10 @@ public class ContextTest {
     public void contextAllowsMultipleInstanceTypes()
     {
         Object inst = new TestClass1();
-        ctx.defineInstance(inst);
+        ctx.addInstance(inst);
 
         Object inst2 = new TestClass2();
-        ctx.defineInstance(inst2);
+        ctx.addInstance(inst2);
 
         Object testInstance;
 
@@ -170,8 +170,8 @@ public class ContextTest {
     @Test
     public void contextResolvesInstanceDependencies()
     {
-        ctx.defineInstance(new TestClass1());
-        ctx.defineInstance(new TestClass2());
+        ctx.addInstance(new TestClass1());
+        ctx.addInstance(new TestClass2());
         ctx.defineSingleton(CompositeTestClass.class);
 
         CompositeTestClass ctc =
@@ -184,12 +184,12 @@ public class ContextTest {
     @Test
     public void contextShadowsInstanceDependencies()
     {
-        ctx.defineInstance(new TestClass1());
+        ctx.addInstance(new TestClass1());
 
         Object inst1 = ctx.getInstance(TestClass1.class);
 
-        ctx.defineInstance(new TestClass1());
-        ctx.defineInstance(new TestClass2());
+        ctx.addInstance(new TestClass1());
+        ctx.addInstance(new TestClass2());
         ctx.defineSingleton(CompositeTestClass.class);
 
         CompositeTestClass ctc =
