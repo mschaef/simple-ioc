@@ -25,7 +25,7 @@ class InstanceDefinition extends Definition
         return new Class[0];
     }
 
-    boolean isBindableTo(Class targetKlass)
+    boolean providesType(Class targetKlass)
     {
         return targetKlass.isAssignableFrom(instance.getClass());
     }

@@ -4,7 +4,7 @@ abstract class Definition {
 
     abstract String getName();
 
-    abstract boolean isBindableTo(Class targetKlass);
+    abstract boolean providesType(Class targetKlass);
 
     abstract Object getInstance();
 

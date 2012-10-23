@@ -135,7 +135,7 @@ abstract class FactoryDefinition extends Definition
         return object;
     }
 
-    boolean isBindableTo(Class targetKlass)
+    boolean providesType(Class targetKlass)
     {
         return targetKlass.isAssignableFrom(klass);
     }
