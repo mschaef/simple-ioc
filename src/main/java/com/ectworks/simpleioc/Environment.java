@@ -2,6 +2,12 @@ package com.ectworks.simpleioc;
 
 class Environment
 {
+    private static final class Binding
+    {
+        private Definition defn;
+        private Binding prev;
+    }
+
     Binding top = null;
 
     Environment()
@@ -15,17 +21,19 @@ class Environment
 
     void extend(Definition defn)
     {
-        top = new Binding(defn, top);
+        Binding oldTop = top;
+
+        top = new Binding();
+
+        top.defn = defn;
+        top.prev = oldTop;
     }
 
-    Definition lookup(Class klass)
+    private Definition lookup(Class klass)
     {
-        for(Binding pos = top; pos != null; pos = pos.getPrevious()) {
-
-            Definition defn = pos.getDefinition();
-
-            if (defn.isBindableTo(klass))
-                return defn;
+        for(Binding pos = top; pos != null; pos = pos.prev) {
+            if (pos.defn.isBindableTo(klass))
+                return pos.defn;
         }
 
         return null;

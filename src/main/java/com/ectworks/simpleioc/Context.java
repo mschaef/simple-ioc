@@ -67,7 +67,7 @@ public class Context implements InstanceFactory {
 
     public boolean containsInstance(Class klass)
     {
-        return (env.lookup(klass) != null);
+        return env.isBound(klass);
     }
 
 
