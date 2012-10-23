@@ -19,7 +19,8 @@ abstract class FactoryDefinition extends Definition {
     {
         log.error("Invalid definition: {}, {}", this, reason);
 
-        throw new InvalidDefinitionException(reason, klass);
+        throw new RuntimeException("Invalid Definition of " + klass
+                                   + ": " + reason);
     }
 
     FactoryDefinition(Environment env, Class klass)
@@ -36,7 +37,7 @@ abstract class FactoryDefinition extends Definition {
         this.ctor = findInjectionConstructor();
     }
 
-    public String getName()
+    String getName()
     {
         return klass.toString();
     }
@@ -92,7 +93,7 @@ abstract class FactoryDefinition extends Definition {
         return ctor;
     }
 
-    public Class[] getDependancies()
+    Class[] getDependancies()
     {
         return ctor.getParameterTypes();
     }

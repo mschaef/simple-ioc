@@ -3,8 +3,8 @@ package com.ectworks.simpleioc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class InstanceDefinition extends Definition {
-
+class InstanceDefinition extends Definition
+{
     private static final Logger log =
         LoggerFactory.getLogger(InstanceDefinition.class);
 
@@ -15,22 +15,22 @@ class InstanceDefinition extends Definition {
         this.instance = instance;
     }
 
-    public String getName()
+    String getName()
     {
         return instance.getClass().toString();
     }
 
-    public Class[] getDependancies()
+    Class[] getDependancies()
     {
         return new Class[0];
     }
 
-    public boolean isBindableTo(Class targetKlass)
+    boolean isBindableTo(Class targetKlass)
     {
         return targetKlass.isAssignableFrom(instance.getClass());
     }
 
-    public Object getInstance()
+    Object getInstance()
     {
         return instance;
     }
