@@ -103,9 +103,12 @@ abstract class FactoryDefinition extends Definition {
 
         Object[] ctorArguments = new Object[ctorArgumentTypes.length];
 
-        for(int argNum = 0; argNum < ctorArgumentTypes.length; argNum++)
-            ctorArguments[argNum] =
-                env.getInstance(ctorArgumentTypes[argNum]);
+        for(int argNum = 0; argNum < ctorArgumentTypes.length; argNum++) {
+            Definition defn =
+                env.getInstanceDefinition(ctorArgumentTypes[argNum]);
+
+            ctorArguments[argNum] = defn.getInstance();
+        }
 
         return ctorArguments;
     }
@@ -133,6 +136,4 @@ abstract class FactoryDefinition extends Definition {
     {
         return targetKlass.isAssignableFrom(klass);
     }
-
-    abstract <T> T getInstance(Class<T> klass);
 }

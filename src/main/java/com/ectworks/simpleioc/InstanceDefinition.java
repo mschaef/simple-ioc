@@ -30,8 +30,8 @@ class InstanceDefinition extends Definition {
         return targetKlass.isAssignableFrom(instance.getClass());
     }
 
-    public <T> T getInstance(Class<T> klass)
+    public Object getInstance()
     {
-        return (T)instance;
+        return instance;
     }
 }

@@ -19,7 +19,7 @@ class Environment
         this.top  = original.top;
     }
 
-    void extend(Definition defn)
+    void enrich(Definition defn)
     {
         Binding oldTop = top;
 
@@ -39,18 +39,18 @@ class Environment
         return null;
     }
 
-    boolean isBound(Class klass)
+    boolean hasInstanceDefinition(Class klass)
     {
         return (lookup(klass) != null);
     }
 
-    <T> T getInstance(Class<T> klass)
+    Definition getInstanceDefinition(Class<?> klass)
     {
         Definition defn = lookup(klass);
 
         if (defn == null)
             throw new RuntimeException("No definition for instance " + klass);
 
-        return defn.getInstance(klass);
+        return defn;
     }
 }

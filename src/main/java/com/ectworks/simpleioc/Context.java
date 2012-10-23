@@ -38,14 +38,14 @@ public class Context implements InstanceFactory {
         log.info("Enriching {} with {}", this, defn);
 
         for(Class dep : defn.getDependancies()) {
-            if (!env.isBound(dep)) {
+            if (!env.hasInstanceDefinition(dep)) {
                 log.error("Missing dependency {} in {}", dep,  defn);
 
                 throw new RuntimeException("Unknown dependancy: " + dep);
             }
         }
 
-        env.extend(defn);
+        env.enrich(defn);
     }
 
     // TODO: Consider adding a forward definition facility.
@@ -67,13 +67,15 @@ public class Context implements InstanceFactory {
 
     public boolean containsInstance(Class klass)
     {
-        return env.isBound(klass);
+        return env.hasInstanceDefinition(klass);
     }
 
 
     public <T> T getInstance(Class<T> klass)
     {
-        return env.getInstance(klass);
+        Definition defn = env.getInstanceDefinition(klass);
+
+        return (T)defn.getInstance();
     }
 
     public String toString()

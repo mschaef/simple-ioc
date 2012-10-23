@@ -6,7 +6,7 @@ abstract class Definition {
 
     abstract boolean isBindableTo(Class targetKlass);
 
-    abstract <T> T getInstance(Class<T> klass);
+    abstract Object getInstance();
 
     abstract Class[] getDependancies();
 
