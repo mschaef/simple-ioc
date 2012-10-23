@@ -1,13 +1,15 @@
 package com.ectworks.simpleioc;
 
+import javax.inject.Inject;
+
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Constructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class FactoryDefinition extends Definition {
-
+abstract class FactoryDefinition extends Definition
+{
     private static final Logger log =
         LoggerFactory.getLogger(FactoryDefinition.class);
 
