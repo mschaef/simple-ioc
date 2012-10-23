@@ -345,24 +345,5 @@ public class ContextTest {
 
         assertTrue(ctx.getInstance(ClassBase.class) instanceof ClassBase);
     }
-
-    // Context Derivation
-    @Test
-    public void derivedContextSeesExportedParentDefinitions()
-    {
-        ctx.defineSingleton(TestClass1.class);
-        ctx.defineSingleton(TestClass2.class);
-
-        ctx.export(TestClass1.class);
-        ctx.export(TestClass2.class);
-
-        Context ctx2 = new Context("derived", ctx);
-
-        assertSame(ctx.getInstance(TestClass1.class),
-                   ctx2.getInstance(TestClass1.class));
-
-        assertSame(ctx.getInstance(TestClass2.class),
-                   ctx2.getInstance(TestClass2.class));
-    }
 }
 

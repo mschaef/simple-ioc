@@ -12,12 +12,9 @@ public class Context implements InstanceFactory {
 
     Environment env = null;
 
-    Environment exports = null;
-
     public Context(String ctxName)
     {
         this.env = new Environment();
-        this.exports  = new Environment();
         this.ctxName  = ctxName;
 
         initialize();
@@ -26,7 +23,6 @@ public class Context implements InstanceFactory {
     public Context(String ctxName, Context base)
     {
         this.env = new Environment(base.env);
-        this.exports  = new Environment();
         this.ctxName  = ctxName;
 
         initialize();
@@ -74,15 +70,6 @@ public class Context implements InstanceFactory {
         return (env.lookup(klass) != null);
     }
 
-    public void export(Class klass)
-    {
-        Definition defn = env.lookup(klass);
-
-        if (defn == null)
-            throw new RuntimeException("No definition for instance to export " + klass);
-
-        exports.extend(defn);
-    }
 
     public <T> T getInstance(Class<T> klass)
     {
