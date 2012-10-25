@@ -143,8 +143,8 @@ abstract class FactoryDefinition extends Definition
         return object;
     }
 
-    boolean providesType(Class targetKlass)
+    Class getDefinitionClass()
     {
-        return targetKlass.isAssignableFrom(klass);
+        return klass;
     }
 }

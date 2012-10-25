@@ -32,7 +32,7 @@ class Environment
     private Definition lookup(Class klass)
     {
         for(Binding pos = top; pos != null; pos = pos.prev) {
-            if (pos.defn.providesType(klass))
+            if (klass.isAssignableFrom(pos.defn.getDefinitionClass()))
                 return pos.defn;
         }
 

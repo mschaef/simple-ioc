@@ -25,9 +25,9 @@ class InstanceDefinition extends Definition
         // No dependancies. No check.
     }
 
-    boolean providesType(Class targetKlass)
+    Class getDefinitionClass()
     {
-        return targetKlass.isAssignableFrom(instance.getClass());
+        return instance.getClass();
     }
 
     Object getInstance()

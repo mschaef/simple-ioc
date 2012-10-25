@@ -2,7 +2,7 @@ package com.ectworks.simpleioc;
 
 abstract class Definition
 {
-    abstract boolean providesType(Class targetKlass);
+    abstract Class getDefinitionClass();
 
     abstract Object getInstance();
 
