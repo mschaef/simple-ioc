@@ -39,18 +39,13 @@ class Environment
         return null;
     }
 
-    boolean hasInstanceDefinition(Class klass)
+    boolean containsInstanceDefinition(Class klass)
     {
         return (lookup(klass) != null);
     }
 
     Definition getInstanceDefinition(Class<?> klass)
     {
-        Definition defn = lookup(klass);
-
-        if (defn == null)
-            throw new RuntimeException("No definition for instance " + klass);
-
-        return defn;
+        return lookup(klass);
     }
 }

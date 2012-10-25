@@ -42,8 +42,6 @@ public class Context implements InstanceFactory
         env.enrich(defn);
     }
 
-    // TODO: Consider adding a forward definition facility.
-
     public void addInstance(Object instance)
     {
         enrich(new InstanceDefinition(instance));
@@ -61,13 +59,16 @@ public class Context implements InstanceFactory
 
     public boolean containsInstance(Class klass)
     {
-        return env.hasInstanceDefinition(klass);
+        return env.containsInstanceDefinition(klass);
     }
-
 
     public <T> T getInstance(Class<T> klass)
     {
         Definition defn = env.getInstanceDefinition(klass);
+
+        if (defn == null)
+            throw new RuntimeException("No definition for instance " + klass
+                                       + " in " + this);
 
         return (T)defn.getInstance();
     }
