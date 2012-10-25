@@ -15,11 +15,6 @@ class InstanceDefinition extends Definition
         this.instance = instance;
     }
 
-    String getName()
-    {
-        return instance.getClass().toString();
-    }
-
     void checkForDependancies(InstanceFactory factory)
     {
         // No dependancies. No check.

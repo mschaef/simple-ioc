@@ -39,11 +39,6 @@ abstract class FactoryDefinition extends Definition
         this.ctor = findInjectionConstructor();
     }
 
-    String getName()
-    {
-        return klass.toString();
-    }
-
     boolean isExplicitInjectionConstructor(Constructor ctor)
     {
         return (ctor.getAnnotation(Inject.class) != null);
@@ -147,4 +142,5 @@ abstract class FactoryDefinition extends Definition
     {
         return klass;
     }
+
 }
