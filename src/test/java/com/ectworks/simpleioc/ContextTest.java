@@ -46,15 +46,6 @@ public class ContextTest {
 
     static class ClassSubSub extends ClassSub {  }
 
-    // Context Self
-    @Test
-    public void contextReturnsSelf()
-    {
-        Context ctx2 = ctx.getInstance(Context.class);
-
-        assertSame(ctx, ctx2);
-    }
-
     // Instance
     @Test
     public void contextReturnsInstance()

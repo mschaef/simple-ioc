@@ -16,24 +16,15 @@ public class Context implements InstanceFactory
     {
         this.env = new Environment();
         this.ctxName  = ctxName;
-
-        initialize();
     }
 
     public Context(String ctxName, Context base)
     {
         this.env = new Environment(base.env);
         this.ctxName  = ctxName;
-
-        initialize();
     }
 
-    void initialize()
-    {
-        addInstance(this);
-    }
-
-    void enrich(Definition defn)
+    private void enrich(Definition defn)
     {
         log.info("Enriching {} with {}", this, defn);
 
