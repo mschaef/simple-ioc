@@ -55,7 +55,7 @@ public class Context implements InstanceFactory
 
     public <T> T getInstance(Class<T> klass)
     {
-        Definition defn = env.getInstanceDefinition(klass);
+        Definition defn = env.lookupLatestDefinition(klass);
 
         if (defn == null)
             throw new RuntimeException("No definition for instance " + klass

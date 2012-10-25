@@ -111,7 +111,7 @@ abstract class FactoryDefinition extends Definition
 
         for(int argNum = 0; argNum < ctorArgumentTypes.length; argNum++) {
             Definition defn =
-                env.getInstanceDefinition(ctorArgumentTypes[argNum]);
+                env.lookupLatestDefinition(ctorArgumentTypes[argNum]);
 
             ctorArguments[argNum] = defn.getInstance();
         }

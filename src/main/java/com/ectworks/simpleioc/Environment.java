@@ -29,7 +29,7 @@ class Environment
         top.prev = oldTop;
     }
 
-    private Definition lookup(Class klass)
+    Definition lookupLatestDefinition(Class klass)
     {
         for(Binding pos = top; pos != null; pos = pos.prev) {
             if (klass.isAssignableFrom(pos.defn.getDefinitionClass()))
@@ -41,11 +41,6 @@ class Environment
 
     boolean containsInstanceDefinition(Class klass)
     {
-        return (lookup(klass) != null);
-    }
-
-    Definition getInstanceDefinition(Class<?> klass)
-    {
-        return lookup(klass);
+        return (lookupLatestDefinition(klass) != null);
     }
 }
