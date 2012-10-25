@@ -95,14 +95,22 @@ abstract class FactoryDefinition extends Definition
         return ctor;
     }
 
-    Class[] getDependancies()
+    void checkForDependancies(InstanceFactory factory)
     {
-        return ctor.getParameterTypes();
+        for(Class dep : ctor.getParameterTypes()) {
+
+            if (factory.containsInstance(dep))
+                continue;
+
+            log.error("Missing dependency {} in {}", dep, this);
+
+            throw new RuntimeException("Unknown dependancy: " + dep);
+        }
     }
 
     Object[] getConstructorArguments()
     {
-        Class[] ctorArgumentTypes = getDependancies();
+        Class[] ctorArgumentTypes = ctor.getParameterTypes();
 
         Object[] ctorArguments = new Object[ctorArgumentTypes.length];
 

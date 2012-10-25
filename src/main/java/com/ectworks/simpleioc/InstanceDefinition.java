@@ -20,9 +20,9 @@ class InstanceDefinition extends Definition
         return instance.getClass().toString();
     }
 
-    Class[] getDependancies()
+    void checkForDependancies(InstanceFactory factory)
     {
-        return new Class[0];
+        // No dependancies. No check.
     }
 
     boolean providesType(Class targetKlass)

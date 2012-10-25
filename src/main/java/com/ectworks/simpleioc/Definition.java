@@ -1,14 +1,14 @@
 package com.ectworks.simpleioc;
 
-abstract class Definition {
-
-    abstract String getName();
-
+abstract class Definition
+{
     abstract boolean providesType(Class targetKlass);
 
     abstract Object getInstance();
 
-    abstract Class[] getDependancies();
+    abstract void checkForDependancies(InstanceFactory factory);
+
+    abstract String getName();
 
     public String toString()
     {
