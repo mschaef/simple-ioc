@@ -46,7 +46,7 @@ public class ContextTest {
 
     static class ClassSubSub extends ClassSub {  }
 
-    // Instance
+    // Instance ////////////////////////////////////////////////////
     @Test
     public void contextReturnsInstance()
     {
@@ -56,7 +56,9 @@ public class ContextTest {
 
         Object inst2 = ctx.getInstance(TestClass1.class);
 
-        assertSame(inst, inst2);
+        assertSame(inst, inst2,
+                   "Instances added with addInstance should be returned from "
+                   + "getInstance");
     }
 
     @Test
@@ -67,7 +69,9 @@ public class ContextTest {
         Object inst = ctx.getInstance(TestClass1.class);
         Object inst2 = ctx.getInstance(TestClass1.class);
 
-        assertSame(inst, inst2);
+        assertSame(inst, inst2,
+                   "Getting the same added instance twice gets the same "
+                   + "instance twice.");
     }
 
     @Test
@@ -81,7 +85,8 @@ public class ContextTest {
 
         Object inst3 = ctx.getInstance(TestClass1.class);
 
-        assertSame(inst2, inst3);
+        assertSame(inst2, inst3,
+                   "More recently added instances shadow older instances of the same type.");
     }
 
     @Test
@@ -96,13 +101,19 @@ public class ContextTest {
         Object testInstance;
 
         testInstance = ctx.getInstance(TestClass1.class);
-        assertSame(testInstance, inst);
+        assertSame(testInstance, inst,
+                   "With two instance types defined, getInstance returns the "
+                   + "first type defined");
 
         testInstance = ctx.getInstance(TestClass2.class);
-        assertSame(testInstance, inst2);
+        assertSame(testInstance, inst2,
+                   "With two instance types defined, getInstance returns the "
+                   + "second type defined");
+
     }
 
-    // Singleton
+    // Singleton ///////////////////////////////////////////////////
+
     @Test
     public void contextReturnsSingleton()
     {
@@ -110,7 +121,9 @@ public class ContextTest {
 
         Object inst = ctx.getInstance(TestClass1.class);
 
-        assertTrue(inst instanceof TestClass1);
+        assertTrue(inst instanceof TestClass1,
+                   "Getting a singleton instance returns an instance of the "
+                   + "requested type.");
     }
 
     @Test
@@ -121,7 +134,9 @@ public class ContextTest {
         Object inst = ctx.getInstance(TestClass1.class);
         Object inst2 = ctx.getInstance(TestClass1.class);
 
-        assertSame(inst, inst2);
+        assertSame(inst, inst2,
+                   "Getting a singleton twice, returns the same instance "
+                   + "twice.");
     }
 
     @Test
@@ -136,8 +151,13 @@ public class ContextTest {
         Object inst2 = ctx.getInstance(TestClass1.class);
         Object inst3 = ctx.getInstance(TestClass1.class);
 
-        assertNotSame(inst, inst2);
-        assertSame(inst2, inst3);
+        assertNotSame(inst, inst2,
+                      "When a singleton is added twice, the two definitions "
+                      + "each return distinct objects.");
+
+        assertSame(inst2, inst3,
+                   "Getting a shadowing singleton twice, returns the same "
+                   + "instance twice.");
     }
 
     @Test
@@ -149,17 +169,28 @@ public class ContextTest {
         Object inst1 = ctx.getInstance(TestClass1.class);
         Object inst2 = ctx.getInstance(TestClass2.class);
 
-        assertTrue(inst1 instanceof TestClass1);
-        assertTrue(inst2 instanceof TestClass2);
+        assertTrue(inst1 instanceof TestClass1,
+                   "With two instance types defined, getInstance returns the "
+                   + "first type defined");
+
+        assertTrue(inst2 instanceof TestClass2,
+                   "With two instance types defined, getInstance returns the "
+                   + "second type defined");
 
         Object inst1a = ctx.getInstance(TestClass1.class);
         Object inst2a = ctx.getInstance(TestClass2.class);
 
-        assertSame(inst1, inst1a);
-        assertSame(inst2, inst2a);
+        assertSame(inst1, inst1a,
+                   "With two instance types defined, getInstance returns only "
+                   + "one instance of first type defined");
+
+        assertSame(inst2, inst2a,
+                   "With two instance types defined, getInstance returns only "
+                   + "one instance of second type defined");
     }
 
-    // Singleton with Deps
+    // Singleton with Deps /////////////////////////////////////////
+
     @Test
     public void contextResolvesInstanceDependencies()
     {
@@ -170,8 +201,13 @@ public class ContextTest {
         CompositeTestClass ctc =
             ctx.getInstance(CompositeTestClass.class);
 
-        assertSame(ctc.tc1, ctx.getInstance(TestClass1.class));
-        assertSame(ctc.tc2, ctx.getInstance(TestClass2.class));
+        assertSame(ctc.tc1, ctx.getInstance(TestClass1.class),
+                   "When resolving dependencies agaisnt instances, the "
+                   + "dependency is the added instance (First type).");
+
+        assertSame(ctc.tc2, ctx.getInstance(TestClass2.class),
+                   "When resolving dependencies agaisnt instances, the "
+                   + "dependency is the added instance (Second type).");
     }
 
     @Test
@@ -188,8 +224,14 @@ public class ContextTest {
         CompositeTestClass ctc =
             ctx.getInstance(CompositeTestClass.class);
 
-        assertNotSame(ctc.tc1, inst1);
-        assertSame(ctc.tc1, ctx.getInstance(TestClass1.class));
+        assertNotSame(ctc.tc1, inst1,
+                      "When resolving dependencies, instances are shadowed by "
+                      + "later definitions.");
+
+        assertSame(ctc.tc1, ctx.getInstance(TestClass1.class),
+                   "When resolving dependencies against shadowing instances, "
+                   + "the shadowing instance is used to fulfill the "
+                   + "dependency.");
     }
 
     @Test
@@ -202,11 +244,17 @@ public class ContextTest {
         CompositeTestClass ctc =
             ctx.getInstance(CompositeTestClass.class);
 
-        assertSame(ctc.tc1, ctx.getInstance(TestClass1.class));
-        assertSame(ctc.tc2, ctx.getInstance(TestClass2.class));
+        assertSame(ctc.tc1, ctx.getInstance(TestClass1.class),
+                   "When resolving dependencies agaisnt singletons, the "
+                   + "dependency is the added singleton (First type).");
+
+        assertSame(ctc.tc2, ctx.getInstance(TestClass2.class),
+                   "When resolving dependencies agaisnt singletons, the "
+                   + "dependency is the added singleton (Second type).");
     }
 
-    // Prototype
+    // Prototype ///////////////////////////////////////////////////
+
     @Test
     public void contextReturnsPrototype()
     {
@@ -214,7 +262,9 @@ public class ContextTest {
 
         Object inst = ctx.getInstance(TestClass1.class);
 
-        assertTrue(inst instanceof TestClass1);
+        assertTrue(inst instanceof TestClass1,
+                   "Getting a prototype instance returns an instance of the "
+                   + "requested type.");
     }
 
     @Test
@@ -225,10 +275,17 @@ public class ContextTest {
         Object inst = ctx.getInstance(TestClass1.class);
         Object inst2 = ctx.getInstance(TestClass1.class);
 
-        assertTrue(inst instanceof TestClass1);
-        assertTrue(inst2 instanceof TestClass1);
+        assertTrue(inst instanceof TestClass1,
+                   "Getting a prototype instance for the first time returns "
+                   + "an instance of the requested type.");
 
-        assertNotSame(inst, inst2);
+        assertTrue(inst2 instanceof TestClass1,
+                   "Getting a prototype instance for the second time returns "
+                   + "an instance of the requested type.");
+
+        assertNotSame(inst, inst2,
+                      "Two getInstance calls for the same prototype return "
+                      + "two distinct instances.");
     }
 
     @Test
@@ -240,8 +297,13 @@ public class ContextTest {
         Object inst1 = ctx.getInstance(TestClass1.class);
         Object inst2 = ctx.getInstance(TestClass2.class);
 
-        assertTrue(inst1 instanceof TestClass1);
-        assertTrue(inst2 instanceof TestClass2);
+        assertTrue(inst1 instanceof TestClass1,
+                   "Getting the first prototype instance for the first time "
+                   + "returns an instance of the requested type.");
+
+        assertTrue(inst2 instanceof TestClass2,
+                   "Getting the second prototype instance for the first time "
+                   + "returns an instance of the requested type.");
 
         Object inst1a = ctx.getInstance(TestClass1.class);
         Object inst2a = ctx.getInstance(TestClass2.class);
@@ -249,8 +311,14 @@ public class ContextTest {
         assertNotSame(inst1, inst1a);
         assertNotSame(inst2, inst2a);
 
-        assertTrue(inst1a instanceof TestClass1);
-        assertTrue(inst2a instanceof TestClass2);
+        assertTrue(inst1a instanceof TestClass1,
+                   "Getting the first prototype instance for the second time "
+                   + "returns an instance of the requested type.");
+
+        assertTrue(inst2a instanceof TestClass2,
+                   "Getting the second prototype instance for the second time "
+                   + "returns an instance of the requested type.");
+
     }
 
     @Test
@@ -260,17 +328,16 @@ public class ContextTest {
         ctx.definePrototype(TestClass2.class);
         ctx.definePrototype(CompositeTestClass.class);
 
-        CompositeTestClass ctc =
-            ctx.getInstance(CompositeTestClass.class);
+        CompositeTestClass ctc1 = ctx.getInstance(CompositeTestClass.class);
+        CompositeTestClass ctc2 = ctx.getInstance(CompositeTestClass.class);
 
-        TestClass1 inst1 = ctx.getInstance(TestClass1.class);
-        TestClass2 inst2 = ctx.getInstance(TestClass2.class);
-
-        assertNotSame(ctc.tc1, inst1);
-        assertNotSame(ctc.tc2, inst2);
+        assertNotSame(ctc1.tc1, ctc2.tc1,
+                      "Prototype dependencies resolve to different instances.");
+        assertNotSame(ctc1.tc2, ctc2.tc2,
+                      "Prototype dependencies resolve to different instances.");
     }
 
-    // Dependency errors
+    // Dependency errors ///////////////////////////////////////////
 
     @Test(expectedExceptions = RuntimeException.class)
     public void contextRequiresSingletonDependencies1()
@@ -298,7 +365,8 @@ public class ContextTest {
         ctx.definePrototype(CompositeTestClass.class);
     }
 
-    // Transitive Dependencies
+    // Transitive Dependencies /////////////////////////////////////
+
     @Test
     public void contextResolvesTransitiveSingletonDependencies()
     {
@@ -307,18 +375,29 @@ public class ContextTest {
         ctx.defineSingleton(CompositeTestClass.class);
         ctx.defineSingleton(TransitiveTestClass.class);
 
+        // Request instances in an order that forces the container to
+        // create dependency objects automatically.
+
         TransitiveTestClass ttc = ctx.getInstance(TransitiveTestClass.class);
         CompositeTestClass ctc  = ctx.getInstance(CompositeTestClass.class);
         TestClass1 inst1        = ctx.getInstance(TestClass1.class);
         TestClass2 inst2        = ctx.getInstance(TestClass2.class);
 
-        assertSame(ttc.ctc, ctc);
-        assertSame(ttc.tc1, inst1);
-        assertSame(ctc.tc1, inst1);
-        assertSame(ctc.tc2, inst2);
+        assertSame(ttc.ctc, ctc,
+                   "First level dependencies resolve to the expected instance.");
+        assertSame(ttc.tc1, inst1,
+                   "Shared first level dependencies resolve to the expected "
+                   + "instance.");
+        assertSame(ctc.tc1, inst1,
+                   "Shared second level dependencies resolve to the expected "
+                   + "instance.");
+        assertSame(ctc.tc2, inst2,
+                   "Second level dependencies resolve to the expected "
+                   + "instance.");
     }
 
-    // Subclass name resolution
+    // Subclass name resolution ////////////////////////////////////
+
     @Test
     public void contextResolvesToFirstMatch1()
     {
@@ -326,7 +405,9 @@ public class ContextTest {
         ctx.defineSingleton(ClassSub.class);
         ctx.defineSingleton(ClassSubSub.class);
 
-        assertTrue(ctx.getInstance(ClassBase.class) instanceof ClassSubSub);
+        assertTrue(ctx.getInstance(ClassBase.class) instanceof ClassSubSub,
+                   "In the presence of multiple candidate instances, the "
+                   + "context resolves to the most recent definition.");
     }
 
     @Test
@@ -336,7 +417,10 @@ public class ContextTest {
         ctx.defineSingleton(ClassSub.class);
         ctx.defineSingleton(ClassBase.class);
 
-        assertTrue(ctx.getInstance(ClassBase.class) instanceof ClassBase);
+        assertTrue(ctx.getInstance(ClassBase.class) instanceof ClassBase,
+                   "In the presence of multiple candidate instances, the "
+                   + "context resolves to the most recent definition, even "
+                   + "though it's not the most specific match.");
     }
 }
 
