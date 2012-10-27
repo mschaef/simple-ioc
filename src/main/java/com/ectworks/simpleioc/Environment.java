@@ -1,5 +1,8 @@
 package com.ectworks.simpleioc;
 
+import java.util.List;
+import java.util.LinkedList;
+
 class Environment
 {
     private static final class Binding
@@ -37,6 +40,18 @@ class Environment
         }
 
         return null;
+    }
+
+    List<Definition> lookupAllDefinitions(Class klass)
+    {
+        LinkedList<Definition> defns = new LinkedList<Definition>();
+
+        for(Binding pos = top; pos != null; pos = pos.prev) {
+            if (klass.isAssignableFrom(pos.defn.getDefinitionClass()))
+                defns.addFirst(pos.defn);
+        }
+
+        return defns;
     }
 
     boolean containsInstanceDefinition(Class klass)

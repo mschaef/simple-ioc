@@ -3,6 +3,9 @@ package com.ectworks.simpleioc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class Context implements InstanceFactory
 {
     private static final Logger log =
@@ -53,15 +56,40 @@ public class Context implements InstanceFactory
         return env.containsInstanceDefinition(klass);
     }
 
-    public <T> T getInstance(Class<T> klass)
+    private <T> T getInstance(Class<T> klass, boolean required)
     {
         Definition defn = env.lookupLatestDefinition(klass);
 
-        if (defn == null)
+        if (defn != null)
+            return (T)defn.getInstance();
+
+        if (required)
             throw new RuntimeException("No definition for instance " + klass
                                        + " in " + this);
 
-        return (T)defn.getInstance();
+        return null;
+    }
+
+    public <T> T getInstance(Class<T> klass)
+    {
+        return getInstance(klass, true);
+    }
+
+    public <T> T getOptionalInstance(Class<T> klass)
+    {
+        return getInstance(klass, false);
+    }
+
+    public <T> T[] getInstances(Class<T> klass)
+    {
+        List<Definition> defns = env.lookupAllDefinitions(klass);
+
+        List<T> instances = new ArrayList<T>(defns.size());
+
+        for(Definition defn : defns)
+            instances.add((T)defn.getInstance());
+
+        return (T[])instances.toArray(new Object[instances.size()]);
     }
 
     public String toString()
