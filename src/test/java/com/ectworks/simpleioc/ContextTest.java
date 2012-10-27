@@ -3,6 +3,8 @@ package com.ectworks.simpleioc;
 import org.testng.annotations.*;
 import static org.testng.Assert.*;
 
+import javax.inject.Inject;
+
 public class ContextTest {
 
     Context ctx = null;
@@ -15,8 +17,24 @@ public class ContextTest {
 
     // Test Classes
 
-    static class TestClass1 { public TestClass1() { }; }
-    static class TestClass2 { public TestClass2() { }; }
+    static class TestClass1 {
+        int id = -1;
+
+        @Inject
+        public TestClass1() {
+        }
+
+        public TestClass1(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+    }
+
+    static class TestClass2 {
+    }
 
     static class CompositeTestClass {
         public TestClass1 tc1 = null;
@@ -365,6 +383,42 @@ public class ContextTest {
         ctx.definePrototype(CompositeTestClass.class);
     }
 
+    // Missing Object //////////////////////////////////////////////
+
+    @Test(expectedExceptions = RuntimeException.class)
+    public void contextFailstoGetMissingInstance()
+    {
+        ctx.defineSingleton(TestClass1.class);
+
+        ctx.getInstance(CompositeTestClass.class);
+    }
+
+    public void contextGetsNullForOptionalMissingInstance()
+    {
+        ctx.defineSingleton(TestClass1.class);
+
+        Object obj =
+            ctx.getOptionalInstance(CompositeTestClass.class);
+
+        assertNull(obj, "getOptionalInstance returns null for missing "
+                   + "instances.");
+    }
+
+    public void contextGetsEmptyArrayForMissingInstance()
+    {
+        ctx.defineSingleton(TestClass1.class);
+
+        Object[] objs = ctx.getInstances(CompositeTestClass.class);
+
+        assertNotNull(objs,
+                      "getInstances returns an array, even when the context "
+                      + "is missing a definition for the type.");
+
+        assertEquals(objs.length, 0,
+                     "getInstances returns an array of size zero when the "
+                     + "context is missing a definition for the type.");
+    }
+
     // Transitive Dependencies /////////////////////////////////////
 
     @Test
@@ -421,6 +475,30 @@ public class ContextTest {
                    "In the presence of multiple candidate instances, the "
                    + "context resolves to the most recent definition, even "
                    + "though it's not the most specific match.");
+    }
+
+    // Multiple Instances //////////////////////////////////////////
+    @Test
+    public void contextReturnsMultipleInstances()
+    {
+        ctx.addInstance(new TestClass1(0));
+        ctx.addInstance(new TestClass1(1));
+        ctx.addInstance(new TestClass1(2));
+        ctx.addInstance(new TestClass1(3));
+        ctx.addInstance(new TestClass1(4));
+
+        TestClass1[] tc1s = ctx.getInstances(TestClass1.class);
+
+        assertNotNull(tc1s, "getInstances returns an array.");
+
+        assertEquals(tc1s.length, 5,
+                     "getInstances returns an array of size five when the "
+                     + "context contains five instances.");
+
+        for(int ii = 0; ii < 5; ii++)
+            assertEquals(tc1s[ii].getId(), ii,
+                         "Object " + ii + " is returned in [" + ii + "]");
+
     }
 }
 

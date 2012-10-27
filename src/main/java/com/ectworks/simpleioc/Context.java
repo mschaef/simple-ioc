@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.lang.reflect.Array;
 
 public class Context implements InstanceFactory
 {
@@ -89,7 +90,7 @@ public class Context implements InstanceFactory
         for(Definition defn : defns)
             instances.add((T)defn.getInstance());
 
-        return (T[])instances.toArray(new Object[instances.size()]);
+        return (T[])instances.toArray((T[])Array.newInstance(klass, 0));
     }
 
     public String toString()
